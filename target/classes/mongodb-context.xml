@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"  
+    xsi:schemaLocation="http://www.springframework.org/schema/context   
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+          http://www.springframework.org/schema/data/mongo   
+          http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd   
+          http://www.springframework.org/schema/beans   
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"> 
+  
+  	<context:component-scan base-package="com.favccxx.favsoft.mystyle">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+ 
+    <!-- 加载mongodb的属性配置文件 -->
+    <context:property-placeholder location="classpath:database.properties" />
+    
+    <!-- 定义mongo对象，对应的是mongodb官方jar包中的Mongo，replica-set设置集群副本的ip地址和端口 -->
+    <mongo:mongo id="mongo" replica-set="${mongo.host}">
+  
+        <mongo:options
+             connections-per-host="${mongo.connectionsPerHost}"
+             threads-allowed-to-block-for-connection-multiplier="${mongo.threadsAllowedToBlockForConnectionMultiplier}"
+             connect-timeout="${mongo.connectTimeout}"
+             max-wait-time="${mongo.maxWaitTime}"
+             auto-connect-retry="${mongo.autoConnectRetry}"
+             socket-keep-alive="${mongo.socketKeepAlive}"
+             socket-timeout="${mongo.socketTimeout}"
+             slave-ok="${mongo.slaveOk}"
+             write-number="1"
+             write-timeout="0"
+             write-fsync="true"/>        
+    </mongo:mongo>
+    
+<!--     <mongo:db-factory dbname="database" mongo-ref="mongo" /> -->
+    
+ 
+	<bean id="builder" class="com.mongodb.MongoClientOptions.Builder">
+	</bean>
+
+	
+	<!-- 使用工厂创建morphia实例，同时完成类映射操作 -->
+	<bean id="morphia" class="com.favccxx.favsoft.mystyle.ext.MorphiaFactoryBean">
+		<!-- 指定要扫描的POJO包路径 -->
+		<property name="mapPackages">
+			<array>
+				<value>com.favccxx.favsoft.mystyle.pojo</value>
+			</array>
+		</property>
+	</bean>
+	
+	<!-- 使用工厂创建datastore，同时完成index和caps的确认操作 -->
+	<bean id="datastore" class="com.favccxx.favsoft.mystyle.ext.DataStoreFactoryBean">
+		<property name="morphia" ref="morphia" />
+		<property name="mongo" ref="mongo" />
+		<property name="dbName" value="${mongo.dbName}" />
+		<property name="toEnsureIndexes" value="true" />
+		<property name="toEnsureCaps" value="true" />
+	</bean>
+    
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg ref="mongo" />
+        <constructor-arg name="databaseName" value="db_mongo" />
+    </bean>
+    
+    <bean id="blogDao" class="com.favccxx.favsoft.mystyle.dao.BlogDao">
+		<constructor-arg ref="datastore" index="0"/>
+	</bean>
+          
+ </beans>
