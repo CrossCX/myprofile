@@ -6,9 +6,9 @@ import org.mongodb.morphia.dao.BasicDAO;
 
 import com.favccxx.favsoft.mystyle.pojo.BlogCategory;
 
-public class CategoryDao extends BasicDAO<BlogCategory, ObjectId> {
+public class BlogCategoryDao extends BasicDAO<BlogCategory, ObjectId> {
 
-	protected CategoryDao(Datastore ds) {
+	protected BlogCategoryDao(Datastore ds) {
 		super(ds);
 	}
 

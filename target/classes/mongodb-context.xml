@@ -69,5 +69,9 @@
     <bean id="blogDao" class="com.favccxx.favsoft.mystyle.dao.BlogDao">
 		<constructor-arg ref="datastore" index="0"/>
 	</bean>
+	
+	<bean id="blogCategoryDao" class="com.favccxx.favsoft.mystyle.dao.BlogCategoryDao">
+		<constructor-arg ref="datastore" index="0"/>
+	</bean>
           
  </beans>

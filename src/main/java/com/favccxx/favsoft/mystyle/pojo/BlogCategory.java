@@ -9,13 +9,25 @@ public class BlogCategory {
 	@Id
 	private String categoryId;
 	
+	/**
+	 * 博客类目标题
+	 */
 	private String categoryName;
 	
+	/**
+	 * 博客类目顺序
+	 */
 	private int categoryOrder;
 	
+	/**
+	 * 博客菜单等级
+	 */
 	private int categoryLevel;
 	
-	private int visible;
+	/**是否可见*/
+	private int isHidden;
+	
+	private String addUserId;
 
 	public String getCategoryId() {
 		return categoryId;
@@ -49,13 +61,22 @@ public class BlogCategory {
 		this.categoryLevel = categoryLevel;
 	}
 
-	public int getVisible() {
-		return visible;
+	public int getIsHidden() {
+		return isHidden;
 	}
 
-	public void setVisible(int visible) {
-		this.visible = visible;
+	public void setIsHidden(int isHidden) {
+		this.isHidden = isHidden;
 	}
+
+	public String getAddUserId() {
+		return addUserId;
+	}
+
+	public void setAddUserId(String addUserId) {
+		this.addUserId = addUserId;
+	}
+
 	
 	
 
